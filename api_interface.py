@@ -135,46 +135,12 @@ def handle_deepseek_siliconflow(text, model, api_key, base_url):
     )
 
 
-def handle_spark(text, model, api_key, base_url):
-    """修正后的星火讯飞API处理器"""
-    config = configparser.ConfigParser()
-    config.read('config.ini')
-
-    # 构建请求头
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {api_key}"
-    }
-
-    prompt = build_prompt(text)
-    # 构建符合文档的请求体
-    data = {
-        "model": model,
-        "user": "f6dcca8f",
-        "messages": [
-            {"role": "system", "content": "您是一位专业的学术论文编辑"},
-            {"role": "user", "content": prompt}
-        ],
-        # 下面是可选参数
-        "temperature": 0.3,
-        "max_tokens": 8192
-    }
-
-    return send_api_request(
-        base_url,
-        headers,
-        data,
-        response_processor=lambda r: r['choices'][0]['message']['content']
-    )
-
 
 def get_api_correction(text, model, api_key, base_url=""):
     """统一API入口"""
     model_handlers = {
         "deepseek-r1": handle_deepseek,
         "deepseek-chat": handle_deepseek,
-        "4.0Ultra": handle_spark,
-        "generalv3.5": handle_spark,
         "deepseek-r1-aliyun": handle_deepseek_aliyun,
         "deepseek-chat-aliyun": handle_deepseek_aliyun,
         "deepseek-r1-siliconflow": handle_deepseek_siliconflow,
