@@ -11,22 +11,20 @@ import shutil
 MODEL_MAP = {
     "1": "deepseek-r1",
     "2": "deepseek-chat",
-    "3": "4.0Ultra",
-    "4": "generalv3.5",
-    "5": "deepseek-r1-aliyun",
-    "6": "deepseek-chat-aliyun",
-    "7": "deepseek-r1-siliconflow",
-    "8": "deepseek-chat-siliconflow"
+    "3": "deepseek-r1-aliyun",
+    "4": "deepseek-chat-aliyun",
+    "5": "deepseek-r1-siliconflow",
+    "6": "deepseek-chat-siliconflow"
 }
 
 
 def select_model():
     """模型选择界面"""
     print("请选择要使用的API模型：")
-    print("1. DeepSeek-R1\n2. DeepSeek-Chat\n3. Spark-v4\n4. Spark-Max\n"
-          "5. Bailian-deepseek-r1\n6. Bailian-deepseek-chat\n"
-          "7. Siliconflow-deepseek-r1\n8. Siliconflow-deepseek-chat")
-    choice = input("请输入选项编号 (1-8)：").strip()
+    print("1. DeepSeek-R1\n2. DeepSeek-Chat\n"
+          "3. Bailian-deepseek-r1\n4. Bailian-deepseek-chat\n"
+          "5. Siliconflow-deepseek-r1\n6. Siliconflow-deepseek-chat")
+    choice = input("请输入选项编号 (1-6)：").strip()
     return MODEL_MAP.get(choice, "deepseek-r1")
 
 
@@ -64,10 +62,13 @@ def main():
     if not config.has_section(selected_model):
         raise ValueError(f"配置文件中缺少 {selected_model} 的配置")
 
-    if selected_model == '4.0Ultra' or selected_model == 'generalv3.5':
-        api_key = config[selected_model]['API_PassWord']
+    if gpt_choice == '2':
+        get_correction = get_api_correction_sdk
+        base_url = config[selected_model].get('BASE_URL_OPENAI', '')  # 可选参数
     else:
-        api_key = config[selected_model]['API_KEY']
+        get_correction = get_api_correction
+        base_url = config[selected_model].get('BASE_URL', '')  # 可选参数
+    api_key = config[selected_model]['API_KEY']
 
     # 文件处理流程
     input_file = input("请输入要处理的TeX文件路径：")
@@ -79,15 +80,9 @@ def main():
     os.makedirs(output_dir, exist_ok=True)
     os.makedirs(corrected_dir, exist_ok=True)
 
-    print("请选择要使用的API调用：1：对应API调用\n2：统一Open-ai SDK调用")
+    print("请选择要使用的API调用：1：对应API调用\n2：Open-ai SDK调用")
     gpt_choice = input("请输入选择的：")
 
-    if gpt_choice == '2':
-        get_correction = get_api_correction_sdk
-        base_url = config[selected_model].get('BASE_URL_OPENAI', '')  # 可选参数
-    else:
-        get_correction = get_api_correction
-        base_url = config[selected_model].get('BASE_URL', '')  # 可选参数
 
     # 拆分文件
     split_files = split_tex_file(input_file, output_dir)
