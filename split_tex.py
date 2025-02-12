@@ -137,30 +137,3 @@ def split_by_character_limit_with_protection(body, max_chars=3072):
         chunks.append(current_chunk)
 
     return chunks
-
-
-'''
-def parse_sections(body):
-    sections = []
-    current_section = []
-    current_header = None
-    in_section = False
-
-    for line in body.split('\n'):
-        line = line.strip()
-        if line.startswith('\\section') or line.startswith('\\begin{abstract}'):
-            if current_header:
-                sections.append((current_header, '\n'.join(current_section)))
-            current_header = line
-            current_section = []
-            in_section = True
-        elif in_section:
-            current_section.append(line)
-
-    if current_header:
-        sections.append((current_header, '\n'.join(current_section)))
-
-    return sections
-'''
-
-# split_tex_file('C:/Users/zhu20/Desktop/研究工作/论文/编码/123123/1.tex', 'C:/Users/zhu20/Desktop/研究工作/论文/编码/123123/split')
