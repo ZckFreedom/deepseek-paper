@@ -37,12 +37,3 @@ def merge_tex_files(src_file, corrected_dir, output_dir):
         f.write(final_content)
 
     return merged_path
-
-
-'''
-merged_file = merge_tex_files(
-        src_file="C:/Users/zhu20/Desktop/研究工作/论文/编码/123123/1.tex",
-        corrected_dir="C:/Users/zhu20/Desktop/研究工作/论文/编码/123123/corrected_tex",
-        output_dir="C:/Users/zhu20/Desktop/研究工作/论文/编码/123123/corrected_tex"
-    )
-'''
