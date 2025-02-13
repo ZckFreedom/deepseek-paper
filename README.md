@@ -3,3 +3,5 @@
 
 
 latexdiff导出文件可能有一些符号错误会导致编译失败，需要自行在texstudio中编译一遍找出错误修改即可。
+
+在api_interface或api_interface_sdk文件中可以修改build_promot函数更改要求。
