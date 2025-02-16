@@ -59,6 +59,16 @@ def main():
     selected_model = select_model()
     api_key = config[selected_model]['API_KEY']
 
+    print("请选择要使用的API调用：1：对应API调用\n2：统一Open-ai SDK调用")
+    gpt_choice = input()
+
+    if gpt_choice == '2':
+        get_correction = get_api_correction_sdk
+        base_url = config[selected_model].get('BASE_URL_OPENAI', '')  # 可选参数
+    else:
+        get_correction = get_api_correction
+        base_url = config[selected_model].get('BASE_URL', '')  # 可选参数
+
     # 验证配置
     if not config.has_section(selected_model):
         raise ValueError(f"配置文件中缺少 {selected_model} 的配置")
@@ -72,16 +82,6 @@ def main():
 
     os.makedirs(output_dir, exist_ok=True)
     os.makedirs(corrected_dir, exist_ok=True)
-
-    print("请选择要使用的API调用：1：对应API调用\n2：统一Open-ai SDK调用")
-    gpt_choice = input("请输入选择的：")
-
-    if gpt_choice == '2':
-        get_correction = get_api_correction_sdk
-        base_url = config[selected_model].get('BASE_URL_OPENAI', '')  # 可选参数
-    else:
-        get_correction = get_api_correction
-        base_url = config[selected_model].get('BASE_URL', '')  # 可选参数
 
     # 拆分文件
     split_files = split_tex_file(input_file, output_dir)
