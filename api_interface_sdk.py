@@ -28,7 +28,11 @@ def get_api_correction_sdk(text, model, api_key, base_url=""):
 
     if model not in model_map:
         raise ValueError(f"不支持的模型: {model}")
-
+        
+    client = OpenAI(
+        api_key=api_key,
+        base_url=base_url
+    )
     prompt = build_prompt(text)
 
     completion = client.chat.completions.create(
