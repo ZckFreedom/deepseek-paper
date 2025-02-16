@@ -24,7 +24,7 @@ def select_model():
     print("1. DeepSeek-R1\n2. DeepSeek-Chat\n"
           "3. Bailian-deepseek-r1\n4. Bailian-deepseek-chat\n"
           "5. Siliconflow-deepseek-r1\n6. Siliconflow-deepseek-chat")
-    choice = input("请输入选项编号 (1-6)：").strip()
+    choice = input("请输入选项编号 (1-8)：").strip()
     return MODEL_MAP.get(choice, "deepseek-r1")
 
 
@@ -57,18 +57,11 @@ def main():
 
     # 选择模型
     selected_model = select_model()
+    api_key = config[selected_model]['API_KEY']
 
     # 验证配置
     if not config.has_section(selected_model):
         raise ValueError(f"配置文件中缺少 {selected_model} 的配置")
-
-    if gpt_choice == '2':
-        get_correction = get_api_correction_sdk
-        base_url = config[selected_model].get('BASE_URL_OPENAI', '')  # 可选参数
-    else:
-        get_correction = get_api_correction
-        base_url = config[selected_model].get('BASE_URL', '')  # 可选参数
-    api_key = config[selected_model]['API_KEY']
 
     # 文件处理流程
     input_file = input("请输入要处理的TeX文件路径：")
@@ -80,9 +73,15 @@ def main():
     os.makedirs(output_dir, exist_ok=True)
     os.makedirs(corrected_dir, exist_ok=True)
 
-    print("请选择要使用的API调用：1：对应API调用\n2：Open-ai SDK调用")
+    print("请选择要使用的API调用：1：对应API调用\n2：统一Open-ai SDK调用")
     gpt_choice = input("请输入选择的：")
 
+    if gpt_choice == '2':
+        get_correction = get_api_correction_sdk
+        base_url = config[selected_model].get('BASE_URL_OPENAI', '')  # 可选参数
+    else:
+        get_correction = get_api_correction
+        base_url = config[selected_model].get('BASE_URL', '')  # 可选参数
 
     # 拆分文件
     split_files = split_tex_file(input_file, output_dir)
