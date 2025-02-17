@@ -24,7 +24,7 @@ def select_model():
     print("1. DeepSeek-R1\n2. DeepSeek-Chat\n"
           "3. Bailian-deepseek-r1\n4. Bailian-deepseek-chat\n"
           "5. Siliconflow-deepseek-r1\n6. Siliconflow-deepseek-chat")
-    choice = input("请输入选项编号 (1-8)：").strip()
+    choice = input("请输入选项编号 (1-6)：").strip()
     return MODEL_MAP.get(choice, "deepseek-r1")
 
 
