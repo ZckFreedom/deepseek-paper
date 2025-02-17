@@ -2,12 +2,12 @@
 在config.ini中填入对应的api-key。
 
 1、安装依赖
-    ```sh
+    ```
     pip install -r requirements.txt
     ```
 
 2、运行
-    ```sh
+    ```
     python main.py
     ```
 
