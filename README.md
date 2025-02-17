@@ -3,7 +3,7 @@
    ```
     git clone --depth=1 https://github.com/ZckFreedom/deepseek-paper.git
     cd deepseek-paper
-    ```
+   ```
 
 2、在'config.ini'中填入对应的api-key。
 
