@@ -14,7 +14,10 @@ MODEL_MAP = {
     "3": "deepseek-r1-aliyun",
     "4": "deepseek-chat-aliyun",
     "5": "deepseek-r1-siliconflow",
-    "6": "deepseek-chat-siliconflow"
+    "6": "deepseek-chat-siliconflow",
+    "7": "deepseek-r1-tencent",
+    "8": "deepseek-chat-tencent",
+    "9": "deepseek-r1-scnet"
 }
 
 
@@ -23,8 +26,10 @@ def select_model():
     print("请选择要使用的API模型：")
     print("1. DeepSeek-R1\n2. DeepSeek-Chat\n"
           "3. Bailian-deepseek-r1\n4. Bailian-deepseek-chat\n"
-          "5. Siliconflow-deepseek-r1\n6. Siliconflow-deepseek-chat")
-    choice = input("请输入选项编号 (1-6)：").strip()
+          "5. Siliconflow-deepseek-r1\n6. Siliconflow-deepseek-chat"
+          "7. Tencent-deepseek-r1\n8. Tencent-deepseek-chat\n"
+          "9. Scnet-deepseek-r1")
+    choice = input("请输入选项编号 (1-9)：").strip()
     return MODEL_MAP.get(choice, "deepseek-r1")
 
 
