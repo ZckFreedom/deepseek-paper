@@ -23,7 +23,10 @@ def get_api_correction_sdk(text, model, api_key, base_url=""):
         "deepseek-r1-aliyun": "deepseek-r1",
         "deepseek-chat-aliyun": "deepseek-v3",
         "deepseek-r1-siliconflow": "deepseek-ai/DeepSeek-R1",
-        "deepseek-chat-siliconflow": "deepseek-ai/DeepSeek-V3"
+        "deepseek-chat-siliconflow": "deepseek-ai/DeepSeek-V3",
+        "deepseek-r1-tencent": "deepseek-r1",
+        "deepseek-chat-tencent": "deepseek-v3",
+        "deepseek-r1-scnet": "DeepSeek-R1-Distill-Qwen-32B"
     }
 
     if model not in model_map:
