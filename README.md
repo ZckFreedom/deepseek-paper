@@ -5,7 +5,7 @@
     cd deepseek-paper
    ```
 
-2、在'config.ini'中填入对应的api-key。目前支持Deepseek官方，阿里云百炼，硅基流动(SiliconFlow)的api调用。
+2、在'config.ini'中填入对应的api-key。目前支持Deepseek官方，阿里云百炼，硅基流动(SiliconFlow)，腾讯知识引擎原子能力，超算互联网的api调用。
 
 3、安装依赖
     ```
