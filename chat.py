@@ -1,8 +1,5 @@
 from openai import OpenAI
 import time
-# 初始化对话历史（修复循环迭代问题）
-MAX_HISTORY = 5  # 限制历史记录轮数
-history = []
 client = OpenAI(api_key="sk-5d4a9cf1ebf044c0b32fa19ccbb2d3a1", base_url="https://api.deepseek.com")
 
 
