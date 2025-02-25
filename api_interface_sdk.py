@@ -18,7 +18,7 @@ def build_prompt(text):
 def get_api_correction_sdk(text, model, api_key, base_url=""):
     """统一API入口"""
     model_map = {
-        "deepseek-r1": "deepseek-r1",
+        "deepseek-r1": "deepseek-reasoner",
         "deepseek-chat": "deepseek-chat",
         "deepseek-r1-aliyun": "deepseek-r1",
         "deepseek-chat-aliyun": "deepseek-v3",
