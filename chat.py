@@ -23,8 +23,6 @@ def chat():
 
         messages.append({"role": "user", "content": f"{user_input}"})
 
-        reasoning_text = ""
-        content_text = ""
         response = client.chat.completions.create(
             model="deepseek-reasoner",
             messages=messages,
@@ -77,4 +75,4 @@ def chat():
 
             # 每轮对话结束后重置状态
         print()  # 保证最后换行
-        messages.append({"role": "assistant", "content": content_text})
+        messages.append({"role": "assistant", "content": ''.join(full_response)})
