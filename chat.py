@@ -78,7 +78,3 @@ def chat():
             # 每轮对话结束后重置状态
         print()  # 保证最后换行
         messages.append({"role": "assistant", "content": content_text})
-
-
-if __name__ == "__main__":
-    chat()
