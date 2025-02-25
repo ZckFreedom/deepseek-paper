@@ -1,7 +1,6 @@
 import os
 import configparser
 from split_tex import split_tex_file
-from api_interface import get_api_correction
 from api_interface_sdk import get_api_correction_sdk
 from merge_tex import merge_tex_files
 import subprocess
