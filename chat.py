@@ -1,6 +1,6 @@
 from openai import OpenAI
 import time
-client = OpenAI(api_key="sk-5d4a9cf1ebf044c0b32fa19ccbb2d3a1", base_url="https://api.deepseek.com")
+client = OpenAI(api_key="", base_url="https://api.deepseek.com")
 
 
 def typewriter_print(text, delay=0.02):
