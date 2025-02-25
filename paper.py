@@ -54,7 +54,7 @@ def generate_diff(original, corrected, output_dir):
         print(f"生成差异文档失败：{str(e)}")
 
 
-def main():
+def paper():
     # 读取配置
     config = configparser.ConfigParser()
     config.read('config.ini')
@@ -176,7 +176,3 @@ def main():
         corrected=merged_file,
         output_dir=diff_dir
     )
-
-
-if __name__ == "__main__":
-    main()
