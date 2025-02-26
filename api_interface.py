@@ -1,6 +1,5 @@
 import requests
 import json
-import configparser
 
 
 def send_api_request(url, headers, data, response_processor):
