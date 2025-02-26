@@ -30,8 +30,9 @@ def build_prompt(text):
         "请严格遵循以下要求处理文本内容：\n"
         "1. 仅修改英文文本内容\n"
         "2. 保持所有LaTeX命令和数学公式原样\n"
-        "3. 修正语法错误并优化学术表达\n"
-        "4. 仅输出处理后的文本内容\n"
+        "3. 修正英语语法错误\n"
+        "4. 优化英语学术表达，使其更符合数学专业期刊用语\n"
+        "5. 仅输出处理后的文本内容\n"
         "需要处理的文本内容：\n"
     )
 
@@ -53,7 +54,7 @@ def handle_deepseek(text, model, api_key, base_url):
     data = {
         "model": model_map[model],
         "messages": [
-            {"role": "system", "content": "您是一位专业的数学学术论文编辑"},
+            {"role": "system", "content": "You are a professional editor of academic papers in mathematics."},
             {"role": "user", "content": prompt}
         ],
         "temperature": 0.3,
@@ -86,7 +87,7 @@ def handle_deepseek_aliyun(text, model, api_key, base_url):
     data = {
         "model": model_map[model],
         "messages": [
-            {"role": "system", "content": "您是一位专业的数学学术论文编辑"},
+            {"role": "system", "content": "You are a professional editor of academic papers in mathematics."},
             {"role": "user", "content": prompt}
         ],
         "temperature": 0.3,
@@ -119,7 +120,7 @@ def handle_deepseek_siliconflow(text, model, api_key, base_url):
     data = {
         "model": model_map[model],
         "messages": [
-            {"role": "system", "content": "您是一位专业的数学学术论文编辑"},
+            {"role": "system", "content": "You are a professional editor of academic papers in mathematics."},
             {"role": "user", "content": prompt}
         ],
         "temperature": 0.3,
