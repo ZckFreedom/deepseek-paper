@@ -28,7 +28,10 @@ def get_api_correction_sdk(text, model, api_key, base_url=""):
         model=model,  # 指定请求的版本
         messages=[
             {"role": "system", "content": "You are a professional editor of academic papers in mathematics."},
-            {"role": "user", "content": prompt}]
+            {"role": "user", "content": prompt}],
+        stream=False,
+        temperature=0.3,
+        timeout=None
     )
 
     return completion.choices[0].message.content

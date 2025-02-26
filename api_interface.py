@@ -8,7 +8,7 @@ def send_api_request(url, headers, data, response_processor):
         url,
         headers=headers,
         json=data,
-        stream=True
+        stream=False
     )
 
     if response.status_code != 200:
