@@ -18,7 +18,7 @@
     ```
 
 
-5、选择对应模型，输入本地的tex文件地址，处理完成后会在tex文件地址创建diff-out文件夹并存入对比文件diff_tex。
+5、选择对应模型，使用电脑中的绝对路径输入的tex文件地址，处理完成后会在tex文件地址创建diff-out文件夹并存入对比文件diff_tex。
 
 > [!NOTE]
 > 1、默认Open-ai SDK格式调用，如果需要其他方式参考api_interface文件。
