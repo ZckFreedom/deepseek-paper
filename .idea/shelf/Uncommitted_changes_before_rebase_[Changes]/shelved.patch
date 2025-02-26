@@ -1,0 +1,345 @@
+Index: chat.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from openai import OpenAI\r\nimport time\r\nclient = OpenAI(api_key=\"\", base_url=\"https://api.deepseek.com\")\r\n\r\n\r\ndef typewriter_print(text, delay=0.02):\r\n    for char in text:\r\n        print(char, end='', flush=True)\r\n        time.sleep(delay)\r\n\r\n\r\ndef chat():\r\n    print(\"开始与DeepSeek的对话。输入'退出'来结束对话。\")\r\n\r\n    messages = [\r\n        {\"role\": \"system\", \"content\": \"你是一个擅长代数几何码和代数函数域的数学教授\"}\r\n    ]\r\n    while True:\r\n        user_input = input(\"你: \")\r\n        if user_input.lower() == '退出':\r\n            print(\"对话结束。\")\r\n            break\r\n\r\n        messages.append({\"role\": \"user\", \"content\": f\"{user_input}\"})\r\n\r\n        response = client.chat.completions.create(\r\n            model=\"deepseek-reasoner\",\r\n            messages=messages,\r\n            stream=True,\r\n            temperature=0.1,\r\n        )\r\n\r\n        print(\"DeepSeek: \", end=\"\", flush=True)  # 实时输出前缀\r\n        full_response = []\r\n        reasoning_log = []\r\n\r\n        # 实时处理每个chunk\r\n        for chunk in response:\r\n            delta = chunk.choices[0].delta\r\n            content = getattr(delta, \"content\", \"\") or \"\"\r\n            reasoning = getattr(delta, \"reasoning_content\", \"\") or \"\"\r\n\r\n            # 状态跟踪变量\r\n            is_new_answer = False\r\n\r\n            # 处理推理内容\r\n            if reasoning:\r\n                # 如果是首次出现推理内容\r\n                if not hasattr(response, '_seen_reasoning'):\r\n                    print(\"\\n【推理过程】\", end=\"\", flush=True)\r\n                    response._seen_reasoning = True\r\n\r\n                typewriter_print(reasoning)\r\n                reasoning_log.append(reasoning)\r\n                hasattr(response, '_seen_answer') and delattr(response, '_seen_answer')\r\n\r\n            # 处理正式回答内容\r\n            if content:\r\n                # 如果是从推理切换到回答\r\n                if hasattr(response, '_seen_reasoning') and not hasattr(response, '_seen_answer'):\r\n                    print(\"\\n【最终回答】\", end=\"\", flush=True)  # 添加明确的分隔标识\r\n                    response._seen_answer = True\r\n                    is_new_answer = True\r\n\r\n                # 如果是首次回答且没有推理过程\r\n                if not hasattr(response, '_seen_reasoning') and not hasattr(response, '_seen_answer'):\r\n                    print(\"\\n【回答】\", end=\"\", flush=True)\r\n                    response._seen_answer = True\r\n                    is_new_answer = True\r\n\r\n                # 格式化输出（如果是新回答的第一个字符前加空格）\r\n                formatted_content = f\" {content.strip()}\" if is_new_answer and content.startswith(' ') else content\r\n                typewriter_print(formatted_content)\r\n                full_response.append(content)\r\n\r\n            # 每轮对话结束后重置状态\r\n        print()  # 保证最后换行\r\n        messages.append({\"role\": \"assistant\", \"content\": ''.join(full_response)})\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/chat.py b/chat.py
+--- a/chat.py	(revision 2fa856bb2b2c1873b93c5ee52da0439dd74b42ac)
++++ b/chat.py	(date 1740545744239)
+@@ -1,6 +1,5 @@
+ from openai import OpenAI
+ import time
+-client = OpenAI(api_key="", base_url="https://api.deepseek.com")
+ 
+ 
+ def typewriter_print(text, delay=0.02):
+@@ -9,11 +8,14 @@
+         time.sleep(delay)
+ 
+ 
+-def chat():
++def chat(model, api_key, base_url):
++
++    client = OpenAI(api_key=api_key, base_url=base_url)
++
+     print("开始与DeepSeek的对话。输入'退出'来结束对话。")
+ 
+     messages = [
+-        {"role": "system", "content": "你是一个擅长代数几何码和代数函数域的数学教授"}
++        {"role": "system", "content": "您是一位擅长代数几何码和代数函数域的数学教授"}
+     ]
+     while True:
+         user_input = input("你: ")
+@@ -24,7 +26,7 @@
+         messages.append({"role": "user", "content": f"{user_input}"})
+ 
+         response = client.chat.completions.create(
+-            model="deepseek-reasoner",
++            model=model,
+             messages=messages,
+             stream=True,
+             temperature=0.1,
+Index: config.ini
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>[DEFAULT]\r\nAPI_KEY = \r\nBASE_URL = https://api.deepseek.com/chat/completions\r\nBASE_URL_OPENAI = https://api.deepseek.com\r\n\r\n[deepseek-r1]\r\nAPI_KEY = \r\nBASE_URL = https://api.deepseek.com/chat/completions\r\nBASE_URL_OPENAI = https://api.deepseek.com\r\n\r\n[deepseek-chat]\r\nAPI_KEY = \r\nBASE_URL = https://api.deepseek.com/chat/completions\r\nBASE_URL_OPENAI = https://api.deepseek.com\r\n\r\n[deepseek-r1-aliyun]\r\nAPI_KEY = \r\nBASE_URL_OPENAI= https://dashscope.aliyuncs.com/compatible-mode/v1\r\n\r\n[deepseek-chat-aliyun]\r\nAPI_KEY = \r\nBASE_URL_OPENAI= https://dashscope.aliyuncs.com/compatible-mode/v1\r\n\r\n[deepseek-r1-siliconflow]\r\nAPI_KEY = \r\nBASE_URL= https://api.siliconflow.cn/v1/chat/completions\r\nBASE_URL_OPENAI = https://api.siliconflow.cn/v1\r\n\r\n[deepseek-chat-siliconflow]\r\nAPI_KEY = \r\nBASE_URL= https://api.siliconflow.cn/v1/chat/completions\r\nBASE_URL_OPENAI = https://api.siliconflow.cn/v1\r\n\r\n[deepseek-r1-tencent]\r\nAPI_KEY = \r\nBASE_URL= https://api.lkeap.cloud.tencent.com/v1/chat/completions\r\nBASE_URL_OPENAI = https://api.lkeap.cloud.tencent.com/v1\r\n\r\n[deepseek-chat-tencent]\r\nAPI_KEY = \r\nBASE_URL= https://api.lkeap.cloud.tencent.com/v1/chat/completions\r\nBASE_URL_OPENAI = https://api.lkeap.cloud.tencent.com/v1\r\n\r\n[deepseek-r1-scnet]\r\nAPI_KEY = \r\nBASE_URL= http://activity.scnet.cn:61080/v1/chat/completions\r\nBASE_URL_OPENAI = http://activity.scnet.cn:61080/v1/\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/config.ini b/config.ini
+--- a/config.ini	(revision 2fa856bb2b2c1873b93c5ee52da0439dd74b42ac)
++++ b/config.ini	(date 1740546893905)
+@@ -1,47 +1,57 @@
+ [DEFAULT]
+-API_KEY = 
++API_KEY = sk-5d4a9cf1ebf044c0b32fa19ccbb2d3a1
+ BASE_URL = https://api.deepseek.com/chat/completions
+ BASE_URL_OPENAI = https://api.deepseek.com
+ 
+ [deepseek-r1]
+-API_KEY = 
++MODEL = deepseek-reasoner
++API_KEY = sk-5d4a9cf1ebf044c0b32fa19ccbb2d3a1
+ BASE_URL = https://api.deepseek.com/chat/completions
+-BASE_URL_OPENAI = https://api.deepseek.com
++BASE_URL _OPENAI= https://api.deepseek.com
+ 
+ [deepseek-chat]
+-API_KEY = 
++MODEL = deepseek-reasoner
++API_KEY = sk-5d4a9cf1ebf044c0b32fa19ccbb2d3a1
+ BASE_URL = https://api.deepseek.com/chat/completions
+-BASE_URL_OPENAI = https://api.deepseek.com
++BASE_URL_OPENAI = https://api.deepseek.com/v1
+ 
+ [deepseek-r1-aliyun]
+-API_KEY = 
++MODEL = deepseek-r1
++API_KEY = sk-d736c566bfd24c138d2bf4efd51ea389
+ BASE_URL_OPENAI= https://dashscope.aliyuncs.com/compatible-mode/v1
+ 
+-[deepseek-chat-aliyun]
+-API_KEY = 
++[deepseek-v3-aliyun]
++MODEL = deepseek-v3
++API_KEY = sk-d736c566bfd24c138d2bf4efd51ea389
+ BASE_URL_OPENAI= https://dashscope.aliyuncs.com/compatible-mode/v1
+ 
+ [deepseek-r1-siliconflow]
+-API_KEY = 
++MODEL = deepseek-ai/DeepSeek-R1
++API_KEY = sk-lblsjdridgcmrvkqpyqgjzwytksdmxqwmqfgsgdpgshsrwej
+ BASE_URL= https://api.siliconflow.cn/v1/chat/completions
+ BASE_URL_OPENAI = https://api.siliconflow.cn/v1
+ 
+ [deepseek-chat-siliconflow]
+-API_KEY = 
++MODEL = deepseek-ai/DeepSeek-V3
++API_KEY = sk-lblsjdridgcmrvkqpyqgjzwytksdmxqwmqfgsgdpgshsrwej
+ BASE_URL= https://api.siliconflow.cn/v1/chat/completions
+ BASE_URL_OPENAI = https://api.siliconflow.cn/v1
+ 
+ [deepseek-r1-tencent]
+-API_KEY = 
++MODEL = deepseek-r1
++API_KEY = sk-RLJi9TvjEYhrhWzDJxN0g7fp1e1wfSIObTXt8RXcYDS7GWbM
+ BASE_URL= https://api.lkeap.cloud.tencent.com/v1/chat/completions
+ BASE_URL_OPENAI = https://api.lkeap.cloud.tencent.com/v1
+ 
+-[deepseek-chat-tencent]
+-API_KEY = 
++[deepseek-v3-tencent]
++MODEL = deepseek-v3
++API_KEY = sk-RLJi9TvjEYhrhWzDJxN0g7fp1e1wfSIObTXt8RXcYDS7GWbM
+ BASE_URL= https://api.lkeap.cloud.tencent.com/v1/chat/completions
+ BASE_URL_OPENAI = https://api.lkeap.cloud.tencent.com/v1
+ 
+ [deepseek-r1-scnet]
+-API_KEY = 
++MODEL = DeepSeek-R1-Distill-Qwen-32B
++API_KEY = FazrSrAMM15Qrr7449Df8eF5438b497a87D92b2d095c6b60
+ BASE_URL= http://activity.scnet.cn:61080/v1/chat/completions
+ BASE_URL_OPENAI = http://activity.scnet.cn:61080/v1/
++
+Index: main.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from chat import chat\r\nfrom paper import paper\r\n\r\n\r\nif __name__ == \"__main__\":\r\n    print(\"目前支持1：修改并润色论文，2：对话\")\r\n    choice = input(\"请输入选项：\").strip()\r\n    if choice == 1:\r\n        paper()\r\n    elif choice == 2:\r\n        chat()\r\n    else:\r\n        print(\"开启对话功能\")\r\n        chat()\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/main.py b/main.py
+--- a/main.py	(revision 2fa856bb2b2c1873b93c5ee52da0439dd74b42ac)
++++ b/main.py	(date 1740546322806)
+@@ -1,14 +1,55 @@
+ from chat import chat
+ from paper import paper
++import configparser
++
++MODEL_MAP = {
++    "1": "deepseek-r1",
++    "2": "deepseek-chat",
++    "3": "deepseek-r1-aliyun",
++    "4": "deepseek-v3-aliyun",
++    "5": "deepseek-r1-siliconflow",
++    "6": "deepseek-chat-siliconflow",
++    "7": "deepseek-r1-tencent",
++    "8": "deepsee-v3-tencent",
++    "9": "deepseek-r1-scnet",
++}
++
++
++def select_model():
++    """模型选择界面"""
++    print("请选择要使用的API模型：")
++    print("1. DeepSeek-R1\n2. DeepSeek-Chat\n"
++          "3. Bailian-deepseek-r1\n4. Bailian-deepseek-chat\n"
++          "5. Siliconflow-deepseek-r1\n6. Siliconflow-deepseek-chat"
++          "7. Tencent-deepseek-r1\n8. Tencent-deepseek-chat\n"
++          "9. Scnet-deepseek-r1")
++    choice = input("请输入选项编号 (1-9)：").strip()
++    return MODEL_MAP.get(choice, "deepseek-r1")
+ 
++
++config = configparser.ConfigParser()
++config.read('config.ini')
+ 
+ if __name__ == "__main__":
++    select_model = select_model()
++
++    # 验证配置
++    if not config.has_section(select_model):
++        raise ValueError(f"配置文件中缺少 {select_model} 的配置")
++
++    model = config[select_model]['MODEL']
++    api_key = config[select_model]['API_KEY']
++    base_url = config[select_model].get('BASE_URL_OPENAI', '')
++
++    print("本脚本使用统一Open-ai SDK调用，如果需要其他方法参考api_interface文件。")
++
+     print("目前支持1：修改并润色论文，2：对话")
+-    choice = input("请输入选项：").strip()
+-    if choice == 1:
+-        paper()
+-    elif choice == 2:
+-        chat()
++
++    func = input("请输入选项：").strip()
++    if func == '1':
++        paper(model, api_key, base_url)
++    elif func == '2':
++        chat(model, api_key, base_url)
+     else:
+-        print("开启对话功能")
+-        chat()
++        print("默认开启对话功能")
++        chat(model, api_key, base_url)
+Index: paper.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import os\r\nimport configparser\r\nfrom split_tex import split_tex_file\r\nfrom api_interface_sdk import get_api_correction_sdk\r\nfrom merge_tex import merge_tex_files\r\nimport subprocess\r\nfrom pathlib import Path\r\nimport shutil\r\n\r\nMODEL_MAP = {\r\n    \"1\": \"deepseek-r1\",\r\n    \"2\": \"deepseek-chat\",\r\n    \"3\": \"deepseek-r1-aliyun\",\r\n    \"4\": \"deepseek-chat-aliyun\",\r\n    \"5\": \"deepseek-r1-siliconflow\",\r\n    \"6\": \"deepseek-chat-siliconflow\",\r\n    \"7\": \"deepseek-r1-tencent\",\r\n    \"8\": \"deepseek-chat-tencent\",\r\n    \"9\": \"deepseek-r1-scnet\"\r\n}\r\n\r\n\r\ndef select_model():\r\n    \"\"\"模型选择界面\"\"\"\r\n    print(\"请选择要使用的API模型：\")\r\n    print(\"1. DeepSeek-R1\\n2. DeepSeek-Chat\\n\"\r\n          \"3. Bailian-deepseek-r1\\n4. Bailian-deepseek-chat\\n\"\r\n          \"5. Siliconflow-deepseek-r1\\n6. Siliconflow-deepseek-chat\"\r\n          \"7. Tencent-deepseek-r1\\n8. Tencent-deepseek-chat\\n\"\r\n          \"9. Scnet-deepseek-r1\")\r\n    choice = input(\"请输入选项编号 (1-9)：\").strip()\r\n    return MODEL_MAP.get(choice, \"deepseek-r1\")\r\n\r\n\r\ndef generate_diff(original, corrected, output_dir):\r\n    \"\"\"生成LaTeX差异文档\"\"\"\r\n    diff_path = Path(output_dir) / \"diff_result.tex\"\r\n\r\n    try:\r\n        # 生成diff文件\r\n        subprocess.run(\r\n            [\"latexdiff\", original, corrected, \"--flatten\"],\r\n            check=True,\r\n            stdout=open(diff_path, 'w', encoding='utf-8')\r\n        )\r\n\r\n        # 生成PDF对比文档\r\n        subprocess.run(\r\n            [\"pdflatex\", \"-output-directory\", output_dir, diff_path],\r\n            check=True\r\n        )\r\n        print(f\"差异文档已生成：{diff_path.with_suffix('.pdf')}\")\r\n    except subprocess.CalledProcessError as e:\r\n        print(f\"生成差异文档失败：{str(e)}\")\r\n\r\n\r\ndef paper():\r\n    # 读取配置\r\n    config = configparser.ConfigParser()\r\n    config.read('config.ini')\r\n\r\n    # 选择模型\r\n    selected_model = select_model()\r\n    api_key = config[selected_model]['API_KEY']\r\n\r\n    print(\"本脚本使用统一Open-ai SDK调用，如果需要其他方法参考api_interface文件。\")\r\n    get_correction = get_api_correction_sdk\r\n    base_url = config[selected_model].get('BASE_URL_OPENAI', '')  # 可选参数\r\n\r\n    # 验证配置\r\n    if not config.has_section(selected_model):\r\n        raise ValueError(f\"配置文件中缺少 {selected_model} 的配置\")\r\n\r\n    # 文件处理流程\r\n    input_file = input(\"请输入要处理的TeX文件路径：\")\r\n    base_name = os.path.splitext(os.path.basename(input_file))[0]\r\n\r\n    output_dir = os.path.join(os.path.dirname(input_file), 'split_tex')\r\n    corrected_dir = os.path.join(os.path.dirname(input_file), 'corrected_tex')\r\n\r\n    os.makedirs(output_dir, exist_ok=True)\r\n    os.makedirs(corrected_dir, exist_ok=True)\r\n\r\n    # 拆分文件\r\n    split_files = split_tex_file(input_file, output_dir)\r\n    print(f\"成功分割为 {len(split_files)} 个文件\")\r\n    split_files_body = split_files[1:len(split_files)-1]\r\n    preamble_tex = split_files[0]\r\n    tail_tex = split_files[-1]\r\n    shutil.move(preamble_tex, os.path.join(corrected_dir, 'preamble.tex'))\r\n    shutil.move(tail_tex, os.path.join(corrected_dir, 'tail.tex'))\r\n\r\n    error_tex = []\r\n    # 批量处理\r\n    for i, file_path in enumerate(split_files_body, 1):\r\n        with open(file_path, 'r', encoding='utf-8') as f:\r\n            content = f.read()\r\n        try:\r\n            corrected_content = get_correction(\r\n                content,\r\n                model=selected_model,\r\n                api_key=api_key,\r\n                base_url=base_url\r\n            )\r\n\r\n            output_path = os.path.join(\r\n                corrected_dir,\r\n                f\"{base_name}_part{i}_corrected.tex\"\r\n            )\r\n\r\n            with open(output_path, 'w', encoding='utf-8') as f:\r\n                f.write(corrected_content)\r\n            print(f\"成功处理: {output_path}\")\r\n\r\n        except Exception as e:\r\n            error_tex.append((i, file_path))\r\n            print(f\"处理文件 {file_path} 时出错: {str(e)}\")\r\n\r\n    error_num = 0\r\n    print(\"正在处理\", len(error_tex), \"个错误文件\")\r\n    while len(error_tex) > 0 and error_num < 10:\r\n        i, file_path = error_tex[0]\r\n        with open(file_path, 'r', encoding='utf-8') as f:\r\n            content = f.read()\r\n        try:\r\n            corrected_content = get_correction(\r\n                content,\r\n                model=selected_model,\r\n                api_key=api_key,\r\n                base_url=base_url\r\n            )\r\n\r\n            output_path = os.path.join(\r\n                corrected_dir,\r\n                f\"{base_name}_part{i}_corrected.tex\"\r\n            )\r\n\r\n            with open(output_path, 'w', encoding='utf-8') as f:\r\n                f.write(corrected_content)\r\n            print(f\"成功处理: {output_path}\")\r\n            error_tex.pop(0)\r\n\r\n        except Exception as e:\r\n            print(f\"处理文件 {file_path} 时出错: {str(e)}\")\r\n            error_num += 1\r\n\r\n    if len(error_tex) > 0:\r\n        print(\"部分文件纠错失败，请注意单独处理!\")\r\n        print(error_tex)\r\n        while len(error_tex) > 0:\r\n            i, file_path = error_tex[0]\r\n            with open(file_path, 'r', encoding='utf-8') as f:\r\n                content = f.read()\r\n            output_path = os.path.join(\r\n                corrected_dir,\r\n                f\"{base_name}_part{i}_corrected.tex\"\r\n            )\r\n            with open(output_path, 'w', encoding='utf-8') as f:\r\n                f.write(content)\r\n            error_tex.pop(0)\r\n    print(\"所有文件处理完成\")\r\n\r\n    # 合并校正后的文件\r\n    merged_file = merge_tex_files(\r\n        src_file=input_file,\r\n        corrected_dir=corrected_dir,\r\n        output_dir=corrected_dir\r\n    )\r\n\r\n    # 生成差异文档\r\n    diff_dir = Path(os.path.dirname(input_file)) / \"diff_output\"\r\n    diff_dir.mkdir(exist_ok=True)\r\n\r\n    generate_diff(\r\n        original=input_file,\r\n        corrected=merged_file,\r\n        output_dir=diff_dir\r\n    )\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/paper.py b/paper.py
+--- a/paper.py	(revision 2fa856bb2b2c1873b93c5ee52da0439dd74b42ac)
++++ b/paper.py	(date 1740545785684)
+@@ -1,5 +1,4 @@
+ import os
+-import configparser
+ from split_tex import split_tex_file
+ from api_interface_sdk import get_api_correction_sdk
+ from merge_tex import merge_tex_files
+@@ -7,30 +6,6 @@
+ from pathlib import Path
+ import shutil
+ 
+-MODEL_MAP = {
+-    "1": "deepseek-r1",
+-    "2": "deepseek-chat",
+-    "3": "deepseek-r1-aliyun",
+-    "4": "deepseek-chat-aliyun",
+-    "5": "deepseek-r1-siliconflow",
+-    "6": "deepseek-chat-siliconflow",
+-    "7": "deepseek-r1-tencent",
+-    "8": "deepseek-chat-tencent",
+-    "9": "deepseek-r1-scnet"
+-}
+-
+-
+-def select_model():
+-    """模型选择界面"""
+-    print("请选择要使用的API模型：")
+-    print("1. DeepSeek-R1\n2. DeepSeek-Chat\n"
+-          "3. Bailian-deepseek-r1\n4. Bailian-deepseek-chat\n"
+-          "5. Siliconflow-deepseek-r1\n6. Siliconflow-deepseek-chat"
+-          "7. Tencent-deepseek-r1\n8. Tencent-deepseek-chat\n"
+-          "9. Scnet-deepseek-r1")
+-    choice = input("请输入选项编号 (1-9)：").strip()
+-    return MODEL_MAP.get(choice, "deepseek-r1")
+-
+ 
+ def generate_diff(original, corrected, output_dir):
+     """生成LaTeX差异文档"""
+@@ -54,22 +29,9 @@
+         print(f"生成差异文档失败：{str(e)}")
+ 
+ 
+-def paper():
+-    # 读取配置
+-    config = configparser.ConfigParser()
+-    config.read('config.ini')
++def paper(model, api_key, base_url):
+ 
+-    # 选择模型
+-    selected_model = select_model()
+-    api_key = config[selected_model]['API_KEY']
+-
+-    print("本脚本使用统一Open-ai SDK调用，如果需要其他方法参考api_interface文件。")
+     get_correction = get_api_correction_sdk
+-    base_url = config[selected_model].get('BASE_URL_OPENAI', '')  # 可选参数
+-
+-    # 验证配置
+-    if not config.has_section(selected_model):
+-        raise ValueError(f"配置文件中缺少 {selected_model} 的配置")
+ 
+     # 文件处理流程
+     input_file = input("请输入要处理的TeX文件路径：")
+@@ -98,7 +60,7 @@
+         try:
+             corrected_content = get_correction(
+                 content,
+-                model=selected_model,
++                model=model,
+                 api_key=api_key,
+                 base_url=base_url
+             )
+@@ -125,7 +87,7 @@
+         try:
+             corrected_content = get_correction(
+                 content,
+-                model=selected_model,
++                model=model,
+                 api_key=api_key,
+                 base_url=base_url
+             )
+Index: api_interface_sdk.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from openai import OpenAI\r\n\r\n\r\ndef build_prompt(text):\r\n    \"\"\"构建平台特定的提示词\"\"\"\r\n    base_prompt = (\r\n        \"请严格遵循以下要求处理文本内容：\\n\"\r\n        \"1. 仅修改英文文本内容\\n\"\r\n        \"2. 保持所有LaTeX命令和数学公式原样\\n\"\r\n        \"3. 修正语法错误并优化学术表达\\n\"\r\n        \"4. 仅输出处理后的文本内容\\n\"\r\n        \"需要处理的文本内容：\\n\"\r\n    )\r\n\r\n    return base_prompt + text\r\n\r\n\r\ndef get_api_correction_sdk(text, model, api_key, base_url=\"\"):\r\n    \"\"\"统一API入口\"\"\"\r\n    model_map = {\r\n        \"deepseek-r1\": \"deepseek-reasoner\",\r\n        \"deepseek-chat\": \"deepseek-chat\",\r\n        \"deepseek-r1-aliyun\": \"deepseek-r1\",\r\n        \"deepseek-chat-aliyun\": \"deepseek-v3\",\r\n        \"deepseek-r1-siliconflow\": \"deepseek-ai/DeepSeek-R1\",\r\n        \"deepseek-chat-siliconflow\": \"deepseek-ai/DeepSeek-V3\",\r\n        \"deepseek-r1-tencent\": \"deepseek-r1\",\r\n        \"deepseek-chat-tencent\": \"deepseek-v3\",\r\n        \"deepseek-r1-scnet\": \"DeepSeek-R1-Distill-Qwen-32B\"\r\n    }\r\n\r\n    if model not in model_map:\r\n        raise ValueError(f\"不支持的模型: {model}\")\r\n        \r\n    client = OpenAI(\r\n        api_key=api_key,\r\n        base_url=base_url\r\n    )\r\n    prompt = build_prompt(text)\r\n\r\n    completion = client.chat.completions.create(\r\n        model=model_map[model],  # 指定请求的版本\r\n        messages=[{\"role\": \"system\", \"content\": \"您是一位专业的数学学术论文编辑\"}, {\"role\": \"user\", \"content\": prompt}]\r\n    )\r\n\r\n    return completion.choices[0].message.content\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/api_interface_sdk.py b/api_interface_sdk.py
+--- a/api_interface_sdk.py	(revision 2fa856bb2b2c1873b93c5ee52da0439dd74b42ac)
++++ b/api_interface_sdk.py	(date 1740545763702)
+@@ -17,21 +17,6 @@
+ 
+ def get_api_correction_sdk(text, model, api_key, base_url=""):
+     """统一API入口"""
+-    model_map = {
+-        "deepseek-r1": "deepseek-reasoner",
+-        "deepseek-chat": "deepseek-chat",
+-        "deepseek-r1-aliyun": "deepseek-r1",
+-        "deepseek-chat-aliyun": "deepseek-v3",
+-        "deepseek-r1-siliconflow": "deepseek-ai/DeepSeek-R1",
+-        "deepseek-chat-siliconflow": "deepseek-ai/DeepSeek-V3",
+-        "deepseek-r1-tencent": "deepseek-r1",
+-        "deepseek-chat-tencent": "deepseek-v3",
+-        "deepseek-r1-scnet": "DeepSeek-R1-Distill-Qwen-32B"
+-    }
+-
+-    if model not in model_map:
+-        raise ValueError(f"不支持的模型: {model}")
+-        
+     client = OpenAI(
+         api_key=api_key,
+         base_url=base_url
+@@ -39,7 +24,7 @@
+     prompt = build_prompt(text)
+ 
+     completion = client.chat.completions.create(
+-        model=model_map[model],  # 指定请求的版本
++        model=model,  # 指定请求的版本
+         messages=[{"role": "system", "content": "您是一位专业的数学学术论文编辑"}, {"role": "user", "content": prompt}]
+     )
+ 
+Index: api_interface.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import requests\r\nimport json\r\nimport configparser\r\n\r\n\r\ndef send_api_request(url, headers, data, response_processor):\r\n    \"\"\"通用API请求发送器\"\"\"\r\n    response = requests.post(\r\n        url,\r\n        headers=headers,\r\n        json=data,\r\n        stream=True\r\n    )\r\n\r\n    if response.status_code != 200:\r\n        error_info = f\"API请求失败 ({response.status_code}): {response.text}\"\r\n        raise ConnectionError(error_info)\r\n\r\n    try:\r\n        result = response.json()\r\n        return response_processor(result)\r\n    except KeyError as e:\r\n        raise ValueError(f\"API响应解析失败: {str(e)} 字段缺失\")\r\n    except json.JSONDecodeError:\r\n        raise ValueError(\"无效的API响应格式\")\r\n\r\n\r\ndef build_prompt(text):\r\n    \"\"\"构建平台特定的提示词\"\"\"\r\n    base_prompt = (\r\n        \"请严格遵循以下要求处理文本内容：\\n\"\r\n        \"1. 仅修改英文文本内容\\n\"\r\n        \"2. 保持所有LaTeX命令和数学公式原样\\n\"\r\n        \"3. 修正语法错误并优化学术表达\\n\"\r\n        \"4. 仅输出处理后的文本内容\\n\"\r\n        \"需要处理的文本内容：\\n\"\r\n    )\r\n\r\n    return base_prompt + text\r\n\r\n\r\ndef handle_deepseek(text, model, api_key, base_url):\r\n    \"\"\"处理DeepSeek系列模型\"\"\"\r\n    url = base_url or \"https://api.deepseek.com/v1/chat/completions\"\r\n\r\n    # 根据模型调整参数\r\n    model_map = {\r\n        \"deepseek-r1\": \"deepseek-r1\",\r\n        \"deepseek-chat\": \"deepseek-chat\"\r\n    }\r\n\r\n    prompt = build_prompt(text)\r\n\r\n    data = {\r\n        \"model\": model_map[model],\r\n        \"messages\": [\r\n            {\"role\": \"system\", \"content\": \"您是一位专业的数学学术论文编辑\"},\r\n            {\"role\": \"user\", \"content\": prompt}\r\n        ],\r\n        \"temperature\": 0.3,\r\n        \"max_tokens\": 8192\r\n    }\r\n\r\n    return send_api_request(\r\n        url=url,\r\n        headers={\"Authorization\": f\"Bearer {api_key}\"},\r\n        data=data,\r\n        response_processor=lambda r: r['choices'][0]['message']['content']\r\n    )\r\n\r\n\r\ndef handle_deepseek_aliyun(text, model, api_key, base_url):\r\n    \"\"\"处理DeepSeek系列模型\"\"\"\r\n\r\n    headers = {\r\n        \"Content-Type\": \"application/json\",\r\n        \"Authorization\": f\"Bearer {api_key}\"\r\n    }\r\n\r\n    prompt = build_prompt(text)\r\n\r\n    model_map = {\r\n        \"deepseek-r1-aliyun\": \"deepseek-r1\",\r\n        \"deepseek-chat-aliyun\": \"deepseek-chat\"\r\n    }\r\n\r\n    data = {\r\n        \"model\": model_map[model],\r\n        \"messages\": [\r\n            {\"role\": \"system\", \"content\": \"您是一位专业的数学学术论文编辑\"},\r\n            {\"role\": \"user\", \"content\": prompt}\r\n        ],\r\n        \"temperature\": 0.3,\r\n        \"max_tokens\": 4096\r\n    }\r\n\r\n    return send_api_request(\r\n        url=base_url,\r\n        headers=headers,\r\n        data=data,\r\n        response_processor=lambda r: r['choices'][0]['message']['content']\r\n    )\r\n\r\n\r\ndef handle_deepseek_siliconflow(text, model, api_key, base_url):\r\n    \"\"\"处理DeepSeek系列模型\"\"\"\r\n\r\n    headers = {\r\n        \"Content-Type\": \"application/json\",\r\n        \"Authorization\": f\"Bearer {api_key}\"\r\n    }\r\n\r\n    prompt = build_prompt(text)\r\n\r\n    model_map = {\r\n        \"deepseek-r1-siliconflow\": \"deepseek-ai/DeepSeek-R1\",\r\n        \"deepseek-chat-siliconflow\": \"deepseek-ai/DeepSeek-V3\"\r\n    }\r\n\r\n    data = {\r\n        \"model\": model_map[model],\r\n        \"messages\": [\r\n            {\"role\": \"system\", \"content\": \"您是一位专业的数学学术论文编辑\"},\r\n            {\"role\": \"user\", \"content\": prompt}\r\n        ],\r\n        \"temperature\": 0.3,\r\n        \"max_tokens\": 4096\r\n    }\r\n\r\n    return send_api_request(\r\n        url=base_url,\r\n        headers=headers,\r\n        data=data,\r\n        response_processor=lambda r: r['choices'][0]['message']['content']\r\n    )\r\n\r\n\r\ndef get_api_correction(text, model, api_key, base_url=\"\"):\r\n    \"\"\"统一API入口\"\"\"\r\n    model_handlers = {\r\n        \"deepseek-r1\": handle_deepseek,\r\n        \"deepseek-chat\": handle_deepseek,\r\n        \"deepseek-r1-aliyun\": handle_deepseek_aliyun,\r\n        \"deepseek-chat-aliyun\": handle_deepseek_aliyun,\r\n        \"deepseek-r1-siliconflow\": handle_deepseek_siliconflow,\r\n        \"deepseek-chat-siliconflow\": handle_deepseek_siliconflow\r\n    }\r\n\r\n    if model not in model_handlers:\r\n        raise ValueError(f\"不支持的模型: {model}\")\r\n\r\n    return model_handlers[model](text, model, api_key, base_url)\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/api_interface.py b/api_interface.py
+--- a/api_interface.py	(revision 2fa856bb2b2c1873b93c5ee52da0439dd74b42ac)
++++ b/api_interface.py	(date 1740534319854)
+@@ -1,6 +1,5 @@
+ import requests
+ import json
+-import configparser
+ 
+ 
+ def send_api_request(url, headers, data, response_processor):

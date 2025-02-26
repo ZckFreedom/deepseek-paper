@@ -17,21 +17,6 @@ def build_prompt(text):
 
 def get_api_correction_sdk(text, model, api_key, base_url=""):
     """统一API入口"""
-    model_map = {
-        "deepseek-r1": "deepseek-reasoner",
-        "deepseek-chat": "deepseek-chat",
-        "deepseek-r1-aliyun": "deepseek-r1",
-        "deepseek-chat-aliyun": "deepseek-v3",
-        "deepseek-r1-siliconflow": "deepseek-ai/DeepSeek-R1",
-        "deepseek-chat-siliconflow": "deepseek-ai/DeepSeek-V3",
-        "deepseek-r1-tencent": "deepseek-r1",
-        "deepseek-chat-tencent": "deepseek-v3",
-        "deepseek-r1-scnet": "DeepSeek-R1-Distill-Qwen-32B"
-    }
-
-    if model not in model_map:
-        raise ValueError(f"不支持的模型: {model}")
-        
     client = OpenAI(
         api_key=api_key,
         base_url=base_url
@@ -39,7 +24,7 @@ def get_api_correction_sdk(text, model, api_key, base_url=""):
     prompt = build_prompt(text)
 
     completion = client.chat.completions.create(
-        model=model_map[model],  # 指定请求的版本
+        model=model,  # 指定请求的版本
         messages=[{"role": "system", "content": "您是一位专业的数学学术论文编辑"}, {"role": "user", "content": prompt}]
     )
 

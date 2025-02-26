@@ -1,6 +1,5 @@
 from openai import OpenAI
 import time
-client = OpenAI(api_key="", base_url="https://api.deepseek.com")
 
 
 def typewriter_print(text, delay=0.02):
@@ -9,11 +8,14 @@ def typewriter_print(text, delay=0.02):
         time.sleep(delay)
 
 
-def chat():
+def chat(model, api_key, base_url):
+
+    client = OpenAI(api_key=api_key, base_url=base_url)
+
     print("开始与DeepSeek的对话。输入'退出'来结束对话。")
 
     messages = [
-        {"role": "system", "content": "你是一个擅长代数几何码和代数函数域的数学教授"}
+        {"role": "system", "content": "您是一位擅长代数几何码和代数函数域的数学教授"}
     ]
     while True:
         user_input = input("你: ")
@@ -24,7 +26,7 @@ def chat():
         messages.append({"role": "user", "content": f"{user_input}"})
 
         response = client.chat.completions.create(
-            model="deepseek-reasoner",
+            model=model,
             messages=messages,
             stream=True,
             temperature=0.1,
