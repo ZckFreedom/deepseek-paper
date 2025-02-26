@@ -109,7 +109,7 @@ def pyfile(model, api_key, base_url):
         prompt += content
 
         messages.append({"role": "user", "content": prompt})
-        print("开始请求deepseek并生成代码。")
+        print("开始请求deepseek并生成代码")
         completion = client.chat.completions.create(
             model=model,  # 指定请求的版本
             messages=messages,
