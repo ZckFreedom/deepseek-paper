@@ -6,7 +6,10 @@
    ```
 
 2、在'config.ini'中填入对应的api-key。目前支持Deepseek官方，阿里云百炼，硅基流动(SiliconFlow)，腾讯知识引擎原子能力，超算互联网的api调用。
-
+    ```
+    建议创建‘config_private.ini’文件并在其中填入api-key，这样保证每次项目更新时不需要重新配置
+    ```
+    
 3、安装依赖
     ```
     pip install -r requirements.txt
