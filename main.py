@@ -29,7 +29,11 @@ def select_model():
 
 
 config = configparser.ConfigParser()
-config.read('config.ini')
+try:
+    with open('config_private.ini') as f:
+        config.read_file(f)
+except FileNotFoundError:
+    config.read('config.ini')
 
 if __name__ == "__main__":
     select_model = select_model()
