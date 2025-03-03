@@ -15,7 +15,7 @@ def chat(model, api_key, base_url):
     print("开始与DeepSeek的对话。输入'退出'来结束对话。")
 
     messages = [
-        {"role": "system", "content": "您是一位擅长代数几何码和代数函数域的数学教授"}
+        {"role": "system", "content": "您是一位擅长代数几何码和代数函数域的数学教授，且习惯用$公式$表示数学公式"}
     ]
     while True:
         user_input = input("你: ")
