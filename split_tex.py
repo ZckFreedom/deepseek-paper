@@ -54,7 +54,7 @@ def split_preamble(content):
     return preamble, body, tail
 
 
-def split_by_character_limit_with_protection(body, max_chars=3072):
+def split_by_character_limit_with_protection(body, max_chars=4092):
     """
     将文件内容按照字符数限制分割成多个块，每块最多包含 max_chars 个字符。
     确保 LaTeX 的特殊结构（如数学公式、环境块等）不会被分割。
