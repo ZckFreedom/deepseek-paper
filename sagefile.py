@@ -85,7 +85,7 @@ def load_python_file(filename):
         print(f"读取文件时出错：{str(e)}")
 
 
-def pyfile(model, api_key, base_url):
+def sagefile(model, api_key, base_url):
 
     func, base_prompt = select_function()
     if not func:
