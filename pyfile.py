@@ -119,6 +119,10 @@ def pyfile(model, api_key, base_url):
         )
 
         return_content = completion.choices[0].message.content
+        reason_content = completion.choices[0].message.reasoning_content
+        print("推理过程：", end='')
+        print(reason_content)
+
         save_api_response_to_file(return_content, filename)
 
     except Exception as e:
