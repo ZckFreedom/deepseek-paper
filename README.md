@@ -33,4 +33,4 @@
 > 
 > 2、使用推理模型时，latexdiff导出文件会有数学符号错误会导致自动编译失败，需要自行在texstudio等软件中检查错误重新编译一遍即可。
 >
-> 3、在api_interface或api_interface_sdk文件中可以修改build_promot函数更改要求。
+> 3、在api_interface或api_interface_sdk文件中可以修改build_prompt函数更改要求。
