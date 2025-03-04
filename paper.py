@@ -45,7 +45,7 @@ def paper(model, api_key, base_url):
 
     # 拆分文件
     split_files = split_tex_file(input_file, output_dir)
-    print(f"成功分割为 {len(split_files)} 个文件")
+    print(f"成功分割为 {len(split_files)} 个文件,需要处理{len(split_files)-2}个文件")
     split_files_body = split_files[1:len(split_files)-1]
     preamble_tex = split_files[0]
     tail_tex = split_files[-1]
@@ -79,7 +79,7 @@ def paper(model, api_key, base_url):
             print(f"处理文件 {file_path} 时出错: {str(e)}")
 
     error_num = 0
-    print("正在处理", len(error_tex), "个错误文件")
+    print("正在处理", len(error_tex), "个错误文件(至多处理10次)")
     while len(error_tex) > 0 and error_num < 10:
         i, file_path = error_tex[0]
         with open(file_path, 'r', encoding='utf-8') as f:
