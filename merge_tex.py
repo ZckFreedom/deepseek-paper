@@ -32,7 +32,7 @@ def merge_tex_files(src_file, corrected_dir, output_dir):
     final_content = '\n'.join(merged_content)
 
     # 保存合并文件
-    merged_path = Path(output_dir) / f"merged_{Path(src_file).name}"
+    merged_path = Path(output_dir) / f"merged_tex_{Path(src_file).name}"
     with open(merged_path, 'w', encoding='utf-8') as f:
         f.write(final_content)
 
