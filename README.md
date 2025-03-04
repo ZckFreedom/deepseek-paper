@@ -4,11 +4,12 @@
 > 如需要论文润色，则需要将latex也加入环境变量中。
 > 在命令行使用即可，目前暂不支持额外交互界面。
 
-1、下载项目
+1、Git下载项目
    ```
     git clone --depth=1 https://github.com/ZckFreedom/deepseek-paper.git
     cd deepseek-paper
    ```
+>  也可直接下载zip压缩包。
 
 2、在'config.ini'中填入对应的api-key。目前支持Deepseek官方，阿里云百炼，硅基流动(SiliconFlow)，腾讯知识引擎原子能力，超算互联网的api调用。
 
