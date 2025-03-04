@@ -1,4 +1,9 @@
 # deepseek-paper
+> 准备条件：
+> 电脑安装Python3.10及以上版本，并将python加入环境变量中。
+> 如需要论文润色，则需要将latex也加入环境变量中。
+> 在命令行使用即可，目前暂不支持额外交互界面。
+
 1、下载项目
    ```
     git clone --depth=1 https://github.com/ZckFreedom/deepseek-paper.git
