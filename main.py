@@ -1,7 +1,6 @@
 from chat import chat
 from paper import paper
-from pyfile import pyfile
-from sagefile import sagefile
+from code import codefile
 import configparser
 
 MODEL_MAP = {
@@ -49,7 +48,10 @@ if __name__ == "__main__":
 
     print("本脚本使用统一Open-ai SDK调用，如果需要其他方法参考api_interface文件。")
 
-    print("目前支持1：修改并润色论文，2：对话，3：Python代码，4：SameMath代码")
+    print("目前支持:\n"
+          "1：修改并润色论文\n"
+          "2：对话\n"
+          "3：代码\n")
 
     func = input("请输入选项：").strip()
     if func == '1':
@@ -57,9 +59,7 @@ if __name__ == "__main__":
     elif func == '2':
         chat(model, api_key, base_url)
     elif func == '3':
-        pyfile(model, api_key, base_url)
-    elif func == '4':
-        sagefile(model, api_key, base_url)
+        codefile(model, api_key, base_url)
     else:
         print("默认开启对话功能")
         chat(model, api_key, base_url)
