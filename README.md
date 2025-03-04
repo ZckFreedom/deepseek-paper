@@ -31,6 +31,6 @@
 > [!NOTE]
 > 1、默认Open-ai SDK格式调用，如果需要其他方式参考api_interface文件。
 > 
-> 2、latexdiff导出文件可能有一些符号错误会导致编译失败，需要自行在texstudio中编译一遍找出错误修改即可。
+> 2、使用推理模型时，latexdiff导出文件会有数学符号错误会导致自动编译失败，需要自行在texstudio等软件中检查错误重新编译一遍即可。
 >
 > 3、在api_interface或api_interface_sdk文件中可以修改build_promot函数更改要求。
