@@ -12,7 +12,7 @@ def chat(model, api_key, base_url):
 
     client = OpenAI(api_key=api_key, base_url=base_url)
 
-    print("开始与DeepSeek的对话。输入'退出'来结束对话。")
+    print("开始与DeepSeek的对话。输入'退出'来结束对话,输入'清空'清空历史记录,输入'重置'清空记录并重置角色设定。")
 
     messages = [
         {"role": "system", "content": "您是一位擅长代数几何码和代数函数域的数学教授，且习惯用$公式$表示数学公式"}
@@ -22,6 +22,23 @@ def chat(model, api_key, base_url):
         if user_input.lower() == '退出':
             print("对话结束。")
             break
+
+        if user_input.lower() == '清空' or user_input.lower() == 'clear':
+            messages.clear()
+            messages = [
+                {"role": "system", "content": "您是一位擅长代数几何码和代数函数域的数学教授，且习惯用$公式$表示数学公式"}
+            ]
+            print("已清空历史聊天记录")
+            continue
+
+        if user_input.lower() == '重置' or user_input.lower() == 'reset':
+            role_input = input("请输入角色设定: ")
+            messages.clear()
+            messages = [
+                {"role": "system", "content": f"{role_input}"}
+            ]
+            print("已重置角色设定")
+            continue
 
         messages.append({"role": "user", "content": f"{user_input}"})
 
