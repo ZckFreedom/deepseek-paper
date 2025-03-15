@@ -11,7 +11,7 @@ MODEL_MAP = {
     "5": "deepseek-r1-siliconflow",
     "6": "deepseek-chat-siliconflow",
     "7": "deepseek-r1-tencent",
-    "8": "deepsee-v3-tencent",
+    "8": "deepseek-v3-tencent",
     "9": "deepseek-r1-scnet",
 }
 
