@@ -67,7 +67,7 @@ def split_by_character_limit_with_protection(body, max_chars=4092):
         list: 包含分割后块的列表，每个块是一个字符串。
     """
     # 正则表达式匹配 LaTeX 环境块（如 \begin{...}...\end{...}）
-    latex_env_pattern = re.compile(r'\\begin\{([^}]*)\}(.*?)\\end\{\1\}', re.DOTALL)
+    latex_env_pattern = re.compile(r'\\begin{([^}]*)}(.*?)\\end{\1}', re.DOTALL)
 
     # 正则表达式匹配行内数学公式（如 $...$ 或 \(...\)）
     inline_math_pattern = re.compile(r'(\$.*?\$|\\\(.*?\\\))', re.DOTALL)
