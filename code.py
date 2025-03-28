@@ -7,6 +7,7 @@ Function_MAP = {
     "1": "generation",
     "2": "comments",
     "3": "optimization",
+    "4": "conversion",
 }
 
 Extend_MAP = {
@@ -21,6 +22,7 @@ def prompt_map(choice, ex):
         "1": f"请帮我生成一段能够实现以下要求的{ex}代码：",
         "2": f"请按照要求帮我给下面一段{ex}代码添加注释：",
         "3": f"请按照要求帮我优化下面一段{ex}代码，并在优化部分添加注释：",
+        "4": f"请将下面的SageMath代码转换为Magma代码，仅输出转换后的Magma代码",
     }
     return prompt_maps.get(choice, None)
 
@@ -35,14 +37,21 @@ def select_code():
     return Extend_MAP.get(choice, 'py')
 
 
-def select_function(ex):
+def select_function():
     print("请选择需要的功能：")
     print("1. 代码生成\n"
           "2. 代码添加注释\n"
           "3. 代码优化\n"
+          "4.SageMath代码转Magma代码\n"
           )
-    choice = input("请输入选项编号 (1-3)：").strip()
-    return Function_MAP.get(choice, None), prompt_map(choice, ex)
+    choice = input("请输入选项编号 (1-4)：").strip()
+
+    func = Function_MAP.get(choice, None)
+    if choice == "4":
+        return func, prompt_map(choice, ""), "sage", "mag"
+
+    code_ex = select_code()
+    return func, prompt_map(choice, code_ex), code_ex, code_ex
 
 
 def typewriter_print(text, delay=0.02):
@@ -112,10 +121,9 @@ def load_python_file(filename, ex):
 
 
 def codefile(model, api_key, base_url):
+    func, base_prompt, input_ex, output_ex = select_function()
 
-    code_ex = select_code()
 
-    func, base_prompt = select_function(code_ex)
     if not func:
         print("请重新启动并输入正确编号。")
         return 0
@@ -127,13 +135,13 @@ def codefile(model, api_key, base_url):
     try:
         user_input = input("请输入要求: ")
         prompt = base_prompt + user_input
-        prompt += f"仅输出结果中的{code_ex}代码:\n"
+        prompt += f"仅输出结果中的{output_ex}代码:\n"
 
         filename = input("请输入文件名：")
         if func == 'generation':
             content = ''
         else:
-            content = load_python_file(filename, code_ex)
+            content = load_python_file(filename, input_ex)
         prompt += content
 
         messages.append({"role": "user", "content": prompt})
@@ -168,7 +176,7 @@ def codefile(model, api_key, base_url):
 
         full_code = "".join(full_code)
 
-        save_api_response_to_file(full_code, filename, code_ex)
+        save_api_response_to_file(full_code, filename, output_ex)
 
     except Exception as e:
         print(f"处理时出错，请重试,{str(e)}")
