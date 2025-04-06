@@ -39,12 +39,14 @@ def split_tex_file(input_path, output_dir):
 def split_preamble(content):
     begin_doc = '\\begin{abstract}'
     end_doc = '\\begin{thebibliography}'
+    end_docbib = '\\bibliography'
     doc_start = content.find(begin_doc)
     doc_end = content.find(end_doc)
+    doc_endbib = content.find(end_docbib)
 
     if doc_start == -1:
         raise ValueError("未找到摘要")
-    if doc_end == -1:
+    if doc_end == -1 and doc_endbib == -1:
         raise ValueError("未找到参考文献")
 
     preamble = content[:doc_start]  # 摘要前的设置，不需要更改
