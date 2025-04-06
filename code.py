@@ -123,7 +123,6 @@ def load_python_file(filename, ex):
 def codefile(model, api_key, base_url):
     func, base_prompt, input_ex, output_ex = select_function()
 
-
     if not func:
         print("请重新启动并输入正确编号。")
         return 0
@@ -180,4 +179,3 @@ def codefile(model, api_key, base_url):
 
     except Exception as e:
         print(f"处理时出错，请重试,{str(e)}")
-
