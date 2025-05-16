@@ -1,6 +1,6 @@
 from chat import chat
 from paper import paper
-from code import codefile
+from my_code import codefile
 import configparser
 
 MODEL_MAP = {
