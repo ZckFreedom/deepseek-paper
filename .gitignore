@@ -1,3 +1,5 @@
 .idea
 
 /config_private.ini
+
+__pycache__

@@ -1,5 +1,6 @@
 from openai import OpenAI
 import time
+import readline
 
 
 def typewriter_print(text, delay=0.02):
@@ -19,11 +20,11 @@ def chat(model, api_key, base_url):
     ]
     while True:
         user_input = input("你: ")
-        if user_input.lower() == '退出':
+        if user_input.lower() in ['退出', 'exit']:
             print("对话结束。")
             break
 
-        if user_input.lower() == '清空' or user_input.lower() == 'clear':
+        if user_input.lower() in ['清空', 'clear']:
             messages.clear()
             messages = [
                 {"role": "system", "content": "您是一位擅长代数几何码和代数函数域的数学教授，且习惯用$公式$表示数学公式"}
@@ -31,7 +32,7 @@ def chat(model, api_key, base_url):
             print("已清空历史聊天记录")
             continue
 
-        if user_input.lower() == '重置' or user_input.lower() == 'reset':
+        if user_input.lower() == in ['重置', 'reset']:
             role_input = input("请输入角色设定: ")
             messages.clear()
             messages = [
