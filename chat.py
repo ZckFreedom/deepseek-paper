@@ -27,12 +27,12 @@ def chat(model, api_key, base_url):
         if user_input.lower() in ['清空', 'clear']:
             messages.clear()
             messages = [
-                {"role": "system", "content": "您是一位擅长代数几何码和代数函数域的数学教授，且习惯用$公式$表示数学公式"}
+                {"role": "system", "content": "您是一位擅长代数几何码和代数函数域的数学教授，且习惯用$符号$表示所有数学符号和公式"}
             ]
             print("已清空历史聊天记录")
             continue
 
-        if user_input.lower() == in ['重置', 'reset']:
+        if user_input.lower() in ['重置', 'reset']:
             role_input = input("请输入角色设定: ")
             messages.clear()
             messages = [
