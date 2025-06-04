@@ -1,6 +1,9 @@
 from openai import OpenAI
 import time
-import readline
+try:
+    import readline
+except ModuleNotFoundError:
+    pass
 
 
 def typewriter_print(text, delay=0.02):
@@ -16,7 +19,7 @@ def chat(model, api_key, base_url):
     print("开始与DeepSeek的对话。输入'退出'来结束对话,输入'清空'清空历史记录,输入'重置'清空记录并重置角色设定。")
 
     messages = [
-        {"role": "system", "content": "您是一位擅长代数几何码和代数函数域的数学教授，且习惯用$公式$表示数学公式"}
+        {"role": "system", "content": "您是一位擅长代数几何码和代数函数域的数学教授，并坚持用latex格式符号"}
     ]
     while True:
         user_input = input("你: ")
@@ -27,7 +30,7 @@ def chat(model, api_key, base_url):
         if user_input.lower() in ['清空', 'clear']:
             messages.clear()
             messages = [
-                {"role": "system", "content": "您是一位擅长代数几何码和代数函数域的数学教授，且习惯用$符号$表示所有数学符号和公式"}
+                {"role": "system", "content": "您是一位擅长代数几何码和代数函数域的数学教授，并坚持用latex格式符号"}
             ]
             print("已清空历史聊天记录")
             continue
