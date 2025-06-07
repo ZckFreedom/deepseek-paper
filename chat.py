@@ -19,7 +19,7 @@ def chat(model, api_key, base_url):
     print("开始与DeepSeek的对话。输入'退出'来结束对话,输入'清空'清空历史记录,输入'重置'清空记录并重置角色设定。")
 
     messages = [
-        {"role": "system", "content": "您是一位擅长代数几何码和代数函数域的数学教授，并坚持用latex格式符号"}
+        {"role": "system", "content": "你现在是一位擅长代数几何码和代数函数域的数学教授，并只会用latex格式"}
     ]
     while True:
         user_input = input("你: ")
@@ -30,7 +30,7 @@ def chat(model, api_key, base_url):
         if user_input.lower() in ['清空', 'clear']:
             messages.clear()
             messages = [
-                {"role": "system", "content": "您是一位擅长代数几何码和代数函数域的数学教授，并坚持用latex格式符号"}
+                {"role": "system", "content": "您是一位擅长代数几何码和代数函数域的数学教授，并只会用latex格式"}
             ]
             print("已清空历史聊天记录")
             continue
