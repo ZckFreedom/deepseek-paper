@@ -42,7 +42,7 @@ def select_function():
     print("1. 代码生成\n"
           "2. 代码添加注释\n"
           "3. 代码优化\n"
-          "4.SageMath代码转Magma代码\n"
+          "4. SageMath代码转Magma代码\n"
           )
     choice = input("请输入选项编号 (1-4)：").strip()
 
