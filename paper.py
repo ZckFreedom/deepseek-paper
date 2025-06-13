@@ -30,22 +30,34 @@ def generate_diff(original, corrected, output_dir):
 
 
 def paper(model, api_key, base_url):
-
+    print("请选择要使用的功能：")
+    print("1. 全文英文润色\n"
+          "2. 修正英语语法错误\n"
+    )
+    choice = input("请输入选项：").strip()
     get_correction = get_api_correction_sdk
 
     # 文件处理流程
-    input_file = input("请输入要处理的TeX文件路径：")
-    base_name = os.path.splitext(os.path.basename(input_file))[0]
+    tex_dir_path = os.getcwd() + '/' + 'paper_ai'
+    file_list = os.listdir(tex_dir_path)
+    tex_path = os.path.join(tex_dir_path, file_list[0])
+    base_name = os.path.splitext(os.path.basename(tex_path))[0]
 
-    output_dir = os.path.join(os.path.dirname(input_file), 'split_tex')
-    corrected_dir = os.path.join(os.path.dirname(input_file), 'corrected_tex')
+    output_dir = os.path.join(tex_dir_path, 'split_tex')
+    corrected_dir = os.path.join(tex_dir_path, 'corrected_tex')
 
     os.makedirs(output_dir, exist_ok=True)
     os.makedirs(corrected_dir, exist_ok=True)
 
     # 拆分文件
-    split_files = split_tex_file(input_file, output_dir)
-    print(f"成功分割为 {len(split_files)} 个文件,需要处理{len(split_files)-2}个文件")
+    split_files = split_tex_file(tex_path, output_dir)
+    if choice == '2':
+        prt = "开始修正英语语法错误"
+    else:
+        prt = "开始全文英文润色"
+
+    print(f"{prt},成功分割为 {len(split_files)} 个文件,需要处理{len(split_files)-2}个文件")
+
     split_files_body = split_files[1:len(split_files)-1]
     preamble_tex = split_files[0]
     tail_tex = split_files[-1]
@@ -62,7 +74,8 @@ def paper(model, api_key, base_url):
                 content,
                 model=model,
                 api_key=api_key,
-                base_url=base_url
+                base_url=base_url,
+                mode = choice
             )
 
             output_path = os.path.join(
@@ -89,7 +102,8 @@ def paper(model, api_key, base_url):
                 content,
                 model=model,
                 api_key=api_key,
-                base_url=base_url
+                base_url=base_url,
+                mode = choice
             )
 
             output_path = os.path.join(
@@ -124,17 +138,17 @@ def paper(model, api_key, base_url):
 
     # 合并校正后的文件
     merged_file = merge_tex_files(
-        src_file=input_file,
+        src_file=tex_path,
         corrected_dir=corrected_dir,
         output_dir=corrected_dir
     )
 
     # 生成差异文档
-    diff_dir = Path(os.path.dirname(input_file)) / "diff_output"
+    diff_dir = Path(tex_dir_path) / "diff_output"
     diff_dir.mkdir(exist_ok=True)
 
     generate_diff(
-        original=input_file,
+        original=tex_path,
         corrected=merged_file,
         output_dir=diff_dir
     )
