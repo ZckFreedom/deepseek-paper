@@ -4,5 +4,8 @@
 
 __pycache__
 
-
-text
+codes/python/*
+codes/sagemath/*
+codes/magma/*
+paper_ai/*
+chat_content/*
