@@ -1,15 +1,37 @@
 from openai import OpenAI
 import time
+import emoji
+from filefunctions import save_to_file,compile_latex_and_open
 try:
     import readline
 except ModuleNotFoundError:
     pass
+
+tex_header = ("\\documentclass{article}"
++"\n\\usepackage{ctex}\n\\usepackage{amsmath,amsfonts,amssymb,amsthm}"
++"\n\\title{Conversations}"
++"\n\\begin{document}"
++"\n\\maketitle\n\n")
 
 
 def typewriter_print(text, delay=0.02):
     for char in text:
         print(char, end='', flush=True)
         time.sleep(delay)
+
+
+def pdfreader(al_messages):
+    if len(al_messages) == 0:
+        print("无对话记录。")
+        return 0
+    cons = ''
+    for infor in al_messages[1:]:
+        cons += infor["content"]
+    emoji.replace_emoji(cons, replace='')
+    texmessages = tex_header + cons
+    texmessages += "\\end{document}"
+    full_path = save_to_file(texmessages,"conversations", 'tex', 'chat')
+    compile_latex_and_open(full_path)
 
 
 def chat(model, api_key, base_url):
@@ -23,7 +45,7 @@ def chat(model, api_key, base_url):
     ]
     while True:
         user_input = input("你: ")
-        if user_input.lower() in ['退出', 'exit']:
+        if user_input.lower() in ['退出', 'exit', 'quit']:
             print("对话结束。")
             break
 
@@ -42,6 +64,10 @@ def chat(model, api_key, base_url):
                 {"role": "system", "content": f"{role_input}"}
             ]
             print("已重置角色设定")
+            continue
+
+        if user_input.lower() in ['pdf', 'read', "查看pdf"]:
+            pdfreader(messages)
             continue
 
         messages.append({"role": "user", "content": f"{user_input}"})
