@@ -9,3 +9,9 @@ codes/sagemath/*
 codes/magma/*
 paper_ai/*
 chat_content/*
+
+!codes/python/.gitkeep
+!codes/sagemath/.gitkeep
+!codes/magma/.gitkeep
+!paper_ai/.gitkeep
+!chat_content/.gitkeep
