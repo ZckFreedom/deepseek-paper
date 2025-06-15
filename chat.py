@@ -10,6 +10,7 @@ except ModuleNotFoundError:
 tex_header = ("\\documentclass{article}"
 +"\n\\usepackage{ctex}\n\\usepackage{amsmath,amsfonts,amssymb,amsthm}"
 +"\n\\title{Conversations}"
++"\n\\author{Deepseek}"
 +"\n\\begin{document}"
 +"\n\\maketitle\n\n")
 
