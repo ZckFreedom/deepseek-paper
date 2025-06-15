@@ -96,7 +96,16 @@ def compile_latex_and_open(tex_file_path):
             stderr=subprocess.PIPE,
             text=True
         )
-        print("pdflatex 编译成功！")
+        if result.returncode == 0:
+            print("pdflatex 编译成功！")
+        else:
+            result = subprocess.run(
+                ["xelatex", "-interaction=nonstopmode", tex_file_path],
+                cwd=tex_dir,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True
+        )
         open_pdf(pdf_path)
 
     except Exception as e:
