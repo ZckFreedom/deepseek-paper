@@ -40,7 +40,8 @@ def paper(model, api_key, base_url):
     # 文件处理流程
     tex_dir_path = os.getcwd() + '/' + 'paper_ai'
     file_list = os.listdir(tex_dir_path)
-    tex_path = os.path.join(tex_dir_path, file_list[0])
+    tex_files = [f for f in file_list if f.endswith('.tex')]
+    tex_path = os.path.join(tex_dir_path, tex_files[0])
     base_name = os.path.splitext(os.path.basename(tex_path))[0]
 
     output_dir = os.path.join(tex_dir_path, 'split_tex')
