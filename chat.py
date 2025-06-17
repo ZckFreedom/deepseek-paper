@@ -30,6 +30,7 @@ def pdfreader(al_messages):
     for infor in al_messages[1:]:
         cons += infor["content"]
     cons = emoji.replace_emoji(cons, replace='')
+    cons = cons.replace('#','\\#')
     texmessages = tex_header + cons
     texmessages += "\\end{document}"
     full_path = save_to_file(texmessages,"conversations", 'tex', 'chat')
