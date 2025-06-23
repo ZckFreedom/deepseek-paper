@@ -14,7 +14,7 @@ def generate_diff(original, corrected, output_dir):
     try:
         # 生成diff文件
         subprocess.run(
-            ["latexdiff", original, corrected, "--flatten"],
+            ["latexdiff --math-markup=3", original, corrected, "--flatten"],
             check=True,
             stdout=open(diff_path, 'w', encoding='utf-8')
         )
