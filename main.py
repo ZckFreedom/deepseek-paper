@@ -6,13 +6,16 @@ import configparser
 MODEL_MAP = {
     "1": "deepseek-r1",
     "2": "deepseek-chat",
+    "3": "doubao-seed",
+    "4": "doubao-seed-flash"
 }
 
 
 def select_model():
     """模型选择界面"""
     print("请选择要使用的API模型：")
-    print("1. DeepSeek-R1\n2. DeepSeek-Chat\n")
+    print("1. DeepSeek-R1\n2. DeepSeek-Chat\n" \
+    "3. Doubao-Seed\n4. Doubao-Flash")
     choice = input("请输入选项编号 (1-2)：").strip()
     return MODEL_MAP.get(choice, "deepseek-r1")
 
