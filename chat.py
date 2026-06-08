@@ -29,6 +29,7 @@ def pdfreader(al_messages):
     cons = ''
     for infor in al_messages[1:]:
         cons += infor["content"]
+        cons += "\n\n"
     cons = emoji.replace_emoji(cons, replace='')
     cons = cons.replace('#','\\#')
     texmessages = tex_header + cons
