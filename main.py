@@ -4,8 +4,8 @@ from my_code import codefile
 import configparser
 
 MODEL_MAP = {
-    "1": "deepseek-r1",
-    "2": "deepseek-chat",
+    "1": "deepseek-v4-pro",
+    "2": "deepseek-v4-flash",
     "3": "doubao-seed",
     "4": "doubao-seed-flash"
 }
@@ -14,10 +14,10 @@ MODEL_MAP = {
 def select_model():
     """模型选择界面"""
     print("请选择要使用的API模型：")
-    print("1. DeepSeek-R1\n2. DeepSeek-Chat\n" \
+    print("1. DeepSeek-V4-Pro\n2. DeepSeek-V4-Flash\n" \
     "3. Doubao-Seed\n4. Doubao-Flash")
-    choice = input("请输入选项编号 (1-2)：").strip()
-    return MODEL_MAP.get(choice, "deepseek-r1")
+    choice = input("请输入选项编号 (1-4)：").strip()
+    return MODEL_MAP.get(choice, "deepseek-v4-pro")
 
 
 config = configparser.ConfigParser()
