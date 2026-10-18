@@ -15,6 +15,7 @@ chat_content/*
 !codes/magma/.gitkeep
 !paper_ai/.gitkeep
 !chat_content/.gitkeep
-node_modules/
+
 *.pyc
 .venv/
+

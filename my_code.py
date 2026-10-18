@@ -88,14 +88,16 @@ def codefile(model, api_key, base_url):
             model=model,  # 指定请求的版本
             messages=messages,
             stream=True,
-            temperature=0.3,
-            timeout=None
+            reasoning_effort="low",
+            timeout=120.0
         )
 
         print("DeepSeek: ", end="", flush=True)  # 实时输出前缀
         full_code = []
 
         for chunk in response:
+            if not chunk.choices:
+                continue
             delta = chunk.choices[0].delta
             content = getattr(delta, "content", "") or ""
             reasoning = getattr(delta, "reasoning_content", "") or ""

@@ -43,7 +43,7 @@ def get_api_correction_sdk(text, model, api_key, base_url="", mode='1'):
             {"role": "user", "content": prompt}],
         stream=False,
         temperature=0.3,
-        timeout=None
+        timeout=120.0
     )
 
     return completion.choices[0].message.content

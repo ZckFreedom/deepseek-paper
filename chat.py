@@ -81,8 +81,7 @@ def chat(model, api_key, base_url):
                 model=model,
                 messages=messages,
                 stream=True,
-                temperature=0.1,
-                timeout=None
+                timeout=120.0
             )
 
             print("DeepSeek: ", end="", flush=True)  # 实时输出前缀
@@ -91,6 +90,8 @@ def chat(model, api_key, base_url):
 
             # 实时处理每个chunk
             for chunk in response:
+                if not chunk.choices:
+                    continue
                 delta = chunk.choices[0].delta
                 content = getattr(delta, "content", "") or ""
                 reasoning = getattr(delta, "reasoning_content", "") or ""
