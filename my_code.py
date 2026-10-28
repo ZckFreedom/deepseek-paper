@@ -87,36 +87,16 @@ def codefile(model, api_key, base_url):
         response = client.chat.completions.create(
             model=model,  # 指定请求的版本
             messages=messages,
-            stream=True,
-            reasoning_effort="low",
+            stream=False,
+            extra_body={"thinking": {"type": "disabled"}},
             timeout=120.0
         )
 
-        print("DeepSeek: ", end="", flush=True)  # 实时输出前缀
-        full_code = []
-
-        for chunk in response:
-            if not chunk.choices:
-                continue
-            delta = chunk.choices[0].delta
-            content = getattr(delta, "content", "") or ""
-            reasoning = getattr(delta, "reasoning_content", "") or ""
-
-            if reasoning:
-                # 如果是首次出现推理内容
-                if not hasattr(response, '_seen_reasoning'):
-                    print("\n【推理过程】", end="", flush=True)
-                    response._seen_reasoning = True
-
-                typewriter_print(reasoning)
-                hasattr(response, '_seen_answer') and delattr(response, '_seen_answer')
-
-            if content:
-                full_code.append(content)
-
-        full_code = "".join(full_code)
+        full_code = response.choices[0].message.content
 
         save_to_file(full_code, filename, output_ex, "codes")
-
+        
+        print("DeepSeek: 生成完成",)  # 实时输出前缀
+        
     except Exception as e:
         print(f"处理时出错，请重试,{str(e)}")
