@@ -17,7 +17,7 @@ def select_model():
     """模型选择界面"""
     print("请选择要使用的API模型：")
     print("1. DeepSeek-V4-Pro\n2. DeepSeek-Flash\n" \
-    "3. GPT-sol\n4. GPT-astra\n5. Claude-Opus\n6. Kimi-K2-Thinking")
+    "3. GPT-sol\n4. GPT-astra\n5. Claude-Opus\n6. Kimi-K3-Pro")
     choice = input("请输入选项编号 (1-6)：").strip()
     return MODEL_MAP.get(choice, "deepseek-v4-pro")
 
