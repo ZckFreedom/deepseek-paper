@@ -57,7 +57,7 @@ def paper(model, api_key, base_url):
     else:
         prt = "开始全文英文润色"
 
-    print(f"{prt},成功分割为 {len(split_files)} 个文件,需要处理{len(split_files)-2}个文件")
+    print(f"{prt}，按章节分割为 {len(split_files)-2} 块（另有导言和文献各 1 块，无需处理）")
 
     split_files_body = split_files[1:len(split_files)-1]
     preamble_tex = split_files[0]
